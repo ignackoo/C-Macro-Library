@@ -1,23 +1,9 @@
-*******************************************************************************
-**                             c macro library                               **
-*******************************************************************************
-**                c & cpp cross compiler and platform macros                 **
-*******************************************************************************
+c macro library
 
-Safe macro call
+c & cpp cross compiler and platform macros
 
-Please use macros in safe calling convention without an math ops in calling
 
-i = MIN(x,y);
-
-not in unsafe calling convention
-
-i = MIN(x++,--y);
-i = MIN(x+2,y-1);
-
-*******************************************************************************
-
-C language resources
+c language resources
  
 https://en.wikipedia.org/wiki/C_(programming_language)
 https://en.wikipedia.org/wiki/ANSI_C
