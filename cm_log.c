@@ -13,20 +13,16 @@ void Log_Stdout(int x, const char* fmt, ...)
     if (x)
     {
         time_t t = time(NULL);
-        struct tm* ptm;
+        struct tm stm;
         va_list args;
 #if defined _MSC_VER
-        ptm = malloc(sizeof(struct tm));
-        if (ptm != NULL) localtime_s(ptm, &t);
+        localtime_s(&stm, &t);
 #else
-        ptm = localtime(&t);
+        stm = *localtime(&t);
 #endif
         va_start(args, fmt);
-        if (ptm != NULL)
-        {
-            fprintf(stdout, "%04d.%02d.%02d ", 1900 + ptm->tm_year, 1 + ptm->tm_mon, ptm->tm_mday);
-            fprintf(stdout, "%02d:%02d:%02d ", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-        }
+        fprintf(stdout, "%04d.%02d.%02d ", 1900 + stm.tm_year, 1 + stm.tm_mon, stm.tm_mday);
+        fprintf(stdout, "%02d:%02d:%02d ", stm.tm_hour, stm.tm_min, stm.tm_sec);
         vfprintf(stdout, fmt, args);
         fprintf(stdout, "\n");
         va_end(args);
@@ -39,20 +35,16 @@ void Log_Stderr(int x, const char* fmt, ...)
     if (x)
     {
         time_t t = time(NULL);
-        struct tm* ptm;
+        struct tm stm;
         va_list args;
 #if defined _MSC_VER
-        ptm = malloc(sizeof(struct tm));
-        if (ptm != NULL) localtime_s(ptm, &t);
+        localtime_s(&stm, &t);
 #else
-        ptm = localtime(&t);
+        stm = *localtime(&t);
 #endif
         va_start(args, fmt);
-        if (ptm != NULL)
-        {
-            fprintf(stderr, "%04d.%02d.%02d ", 1900 + ptm->tm_year, 1 + ptm->tm_mon, ptm->tm_mday);
-            fprintf(stderr, "%02d:%02d:%02d ", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-        }
+        fprintf(stderr, "%04d.%02d.%02d ", 1900 + stm.tm_year, 1 + stm.tm_mon, stm.tm_mday);
+        fprintf(stderr, "%02d:%02d:%02d ", stm.tm_hour, stm.tm_min, stm.tm_sec);
         vfprintf(stderr, fmt, args);
         fprintf(stderr, "\n");
         va_end(args);
@@ -65,17 +57,16 @@ void Log_ToFile(const char* logfilename, const char* fmt, ...)
     if (logfilename != NULL)
     {
         time_t t = time(NULL);
-        struct tm* ptm;
+        struct tm stm;
         FILE* pf;
 #if defined _MSC_VER
         errno_t err;
 #endif
         va_list args;
 #if defined _MSC_VER
-        ptm = malloc(sizeof(struct tm));
-        if (ptm != NULL) localtime_s(ptm, &t);
+        localtime_s(&stm, &t);
 #else
-        ptm = localtime(&t);
+        stm = *localtime(&t);
 #endif
 
         /* a+ (create + append) removes EOF in append, option allow appending useful in a log file */
@@ -92,11 +83,8 @@ void Log_ToFile(const char* logfilename, const char* fmt, ...)
         if (pf != NULL)
         {
             va_start(args, fmt);
-            if (ptm != NULL)
-            {
-                fprintf(pf, "%04d.%02d.%02d ", 1900 + ptm->tm_year, 1 + ptm->tm_mon, ptm->tm_mday);
-                fprintf(pf, "%02d:%02d:%02d ", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-            }
+            fprintf(pf, "%04d.%02d.%02d ", 1900 + stm.tm_year, 1 + stm.tm_mon, stm.tm_mday);
+            fprintf(pf, "%02d:%02d:%02d ", stm.tm_hour, stm.tm_min, stm.tm_sec);
             vfprintf(pf, fmt, args);
             fprintf(pf, "\n");
             va_end(args);
